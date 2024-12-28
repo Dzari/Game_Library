@@ -1,0 +1,145 @@
+body {
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  background-color: #e3f2fd;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.game-container {
+  display: flex;
+  max-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.sidebar h2,
+.sidebar h3 {
+  margin: 10px 0;
+  font-weight: bold;
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+}
+
+#game-history {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #f8f9fa;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+#game-history li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  color: #555;
+}
+
+#score {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 15px;
+  padding: 10px;
+  background: #f1f8e9;
+  border-radius: 5px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.main-game {
+  flex-grow: 1;
+  max-width: 600px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.choices {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.choice {
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.choice:hover {
+  background-color: #0056b3;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.result p {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #555;
+}
+
+.result p#winner {
+  font-size: 22px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.right-hand {
+  transform: scaleX(-1);
+}
+
+.animate-hand {
+  animation: moveUpDown 1s infinite;
+}
+
+.animate-right-hand {
+  animation: moveUpDownRight 1s infinite;
+}
+
+@keyframes moveUpDown {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes moveUpDownRight {
+  0%,
+  100% {
+    transform: translateY(0) scaleX(-1);
+  }
+  50% {
+    transform: translateY(-20px) scaleX(-1);
+  }
+}
