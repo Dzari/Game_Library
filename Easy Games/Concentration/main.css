@@ -1,0 +1,84 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f8ff;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.game {
+  width: 60%;
+  max-width: 600px;
+  margin: auto;
+}
+
+.game__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+}
+
+.game__card {
+  width: 100%;
+  padding-top: 150%;
+  background-color: #007bff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+}
+
+.game__card::before,
+.game__card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+}
+
+.game__card::before {
+  background: linear-gradient(135deg, #1e90ff, #87cefa);
+}
+
+.game__card::after {
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  transform: rotateY(180deg);
+}
+
+.game__card--front-carrot::after {
+  background-image: url('./images/carrot.png');
+}
+
+.game__card--front-beans::after {
+  background-image: url('./images/beans.png');
+}
+
+.game__card--front-beet::after {
+  background-image: url('./images/beet.png');
+}
+
+.game__card--front-eggplant::after {
+  background-image: url('./images/eggplant.png');
+}
+
+.game__card--front-pumpkin::after {
+  background-image: url('./images/pumpkin.png');
+}
+
+.game__card--front-tomato::after {
+  background-image: url('./images/tomato.png');
+}
+
+.game__card.flipped {
+  transform: rotateY(180deg);
+}
