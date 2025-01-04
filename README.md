@@ -10,12 +10,12 @@ Welcome to the **Game Library** repository! This project is a comprehensive coll
 These games are focused on building fundamental web development and game programming skills. They do not require any external libraries or frameworks and are built using core web technologies.
 
 #### Games:
+- **Breakout Clone:**
+  - Skills: DOM manipulation, basic game loop, collision detection, simple physics.
 - **Memory Game (Concentration):**
   - Skills: DOM manipulation, event handling, state management.
 - **Rock-Paper-Scissors:**
   - Skills: Randomization, user interaction, game logic.
-- **Tic-Tac-Toe:**
-  - Skills: Two-player interactions, grid-based game logic, win/draw conditions.
 - **Simple Snake Game:**
   - Skills: Basic animation, collision detection, game loop.
 
