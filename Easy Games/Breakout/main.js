@@ -17,7 +17,7 @@ let ballPositionX = 640;
 let ballPositionY = 660;
 
 //music settings
-backgroundMusic.volume = 0.5;
+backgroundMusic.volume = 0.1;
 
 function handleVisibilityChange() {
   if (document.visibilityState === 'visible') {
@@ -59,7 +59,7 @@ const createBricks = () => {
 // Function to start the game
 const startGame = () => {
   backgroundMusic.play();
-  backgroundMusic.volume = 0.5;
+  backgroundMusic.volume = 0.3;
   gameInfo.style.display = 'none';
   createBricks();
   bricks.forEach((brick) => (brick.style.display = 'block'));
