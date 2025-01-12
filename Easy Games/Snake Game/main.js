@@ -24,13 +24,13 @@ function updateSnakePosition() {
   )
     restartGame();
 
-//   if (
-//     snakeData.position.x === applePosition.x &&
-//     snakeData.position.y === applePosition.y
-//   ) {
-//     snakeData.length += 1;
-//     apple.style
-//   }
+  if (
+    snakeData.position.x === applePosition.x &&
+    snakeData.position.y === applePosition.y
+  ) {
+    snakeData.length += 1;
+    apple.style.visibility = 'hidden';
+  }
 
   snake.style.gridColumn = `${snakeData.position.x} / span 1`;
   snake.style.gridRow = `${snakeData.position.y} / span 1`;
@@ -62,6 +62,7 @@ function restartGame() {
   setApplePosition();
   snakeData.position = { x: 12, y: 12 };
   snakeData.direction = { x: 0, y: 0 };
+  apple.style.visibility = 'visible';
 }
 
 document.addEventListener('keydown', changeDirection);
