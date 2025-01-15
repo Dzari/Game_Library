@@ -1,4 +1,4 @@
-const gameField = document.querySelector(".game-field");
+const gameField = document.querySelector(".game__field");
 const gridSize = 25;
 const gridColumns = 32;
 const gridRows = 24;
