@@ -1,22 +1,21 @@
-const gameField = document.querySelector(".game__field");
+const gameField = document.querySelector('.game__field');
 const gridSize = 25;
 const gridColumns = 32;
 const gridRows = 24;
 let gameInterval;
-let speed = 200; 
+let speed = 200;
 
 // Snake Class
 class Snake {
   constructor(startPosition) {
     this.segments = [startPosition];
-    this.direction = { x: 0, y: 0 }; 
-    this.nextDirection = null;
+    this.direction = { x: 0, y: 0 };
+    this.directionQueue = [];
   }
 
   move() {
-    if (this.nextDirection) {
-      this.direction = this.nextDirection;
-      this.nextDirection = null;
+    if (this.directionQueue.length > 0) {
+      this.direction = this.directionQueue.shift();
     }
 
     const newHead = {
@@ -35,19 +34,23 @@ class Snake {
   }
 
   collidesWith(position) {
-    return this.segments.some(segment => segment.x === position.x && segment.y === position.y);
+    return this.segments.some(
+      (segment) => segment.x === position.x && segment.y === position.y
+    );
   }
 
   render() {
-    gameField.innerHTML = "";
+    gameField.innerHTML = '';
     this.segments.forEach((segment, index) => {
-      const segmentDiv = document.createElement("div");
+      const segmentDiv = document.createElement('div');
       segmentDiv.style.width = `${gridSize}px`;
       segmentDiv.style.height = `${gridSize}px`;
-      segmentDiv.style.position = "absolute";
-      segmentDiv.style.transform = `translate(${(segment.x - 1) * gridSize}px, ${(segment.y - 1) * gridSize}px)`;
-      segmentDiv.style.backgroundColor = index === 0 ? "#4caf50" : "#81c784";
-      segmentDiv.style.borderRadius = "5px";
+      segmentDiv.style.position = 'absolute';
+      segmentDiv.style.transform = `translate(${
+        (segment.x - 1) * gridSize
+      }px, ${(segment.y - 1) * gridSize}px)`;
+      segmentDiv.style.backgroundColor = index === 0 ? '#4caf50' : '#81c784';
+      segmentDiv.style.borderRadius = '5px';
       gameField.appendChild(segmentDiv);
     });
   }
@@ -67,13 +70,15 @@ class Apple {
   }
 
   render() {
-    const appleDiv = document.createElement("div");
+    const appleDiv = document.createElement('div');
     appleDiv.style.width = `${gridSize}px`;
     appleDiv.style.height = `${gridSize}px`;
-    appleDiv.style.position = "absolute";
-    appleDiv.style.transform = `translate(${(this.position.x - 1) * gridSize}px, ${(this.position.y - 1) * gridSize}px)`;
-    appleDiv.style.backgroundColor = "#e74c3c";
-    appleDiv.style.borderRadius = "50%";
+    appleDiv.style.position = 'absolute';
+    appleDiv.style.transform = `translate(${
+      (this.position.x - 1) * gridSize
+    }px, ${(this.position.y - 1) * gridSize}px)`;
+    appleDiv.style.backgroundColor = '#e74c3c';
+    appleDiv.style.borderRadius = '50%';
     gameField.appendChild(appleDiv);
   }
 }
@@ -86,13 +91,17 @@ function moveSnake() {
 
   const head = snake.segments[0];
   if (head.x < 1 || head.x > gridColumns || head.y < 1 || head.y > gridRows) {
-    alert("Game Over! The snake hit the wall.");
+    alert('Game Over! The snake hit the wall.');
     resetGame();
     return;
   }
 
-  if (snake.segments.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) {
-    alert("Game Over! The snake collided with itself.");
+  if (
+    snake.segments
+      .slice(1)
+      .some((segment) => segment.x === head.x && segment.y === head.y)
+  ) {
+    alert('Game Over! The snake collided with itself.');
     resetGame();
     return;
   }
@@ -107,26 +116,32 @@ function moveSnake() {
 }
 
 function handleDirectionChange(event) {
-  const newDirection = { ...snake.direction };
+  let newDirection;
 
   switch (event.key) {
-    case "ArrowUp":
-      if (snake.direction.y === 0) newDirection.x = 0, newDirection.y = -1;
+    case 'ArrowUp':
+      newDirection = { x: 0, y: -1 };
       break;
-    case "ArrowDown":
-      if (snake.direction.y === 0) newDirection.x = 0, newDirection.y = 1;
+    case 'ArrowDown':
+      newDirection = { x: 0, y: 1 };
       break;
-    case "ArrowLeft":
-      if (snake.direction.x === 0) newDirection.x = -1, newDirection.y = 0;
+    case 'ArrowLeft':
+      newDirection = { x: -1, y: 0 };
       break;
-    case "ArrowRight":
-      if (snake.direction.x === 0) newDirection.x = 1, newDirection.y = 0;
+    case 'ArrowRight':
+      newDirection = { x: 1, y: 0 };
       break;
+    default:
+      return;
   }
 
-  //if (newDirection.x !== -snake.direction.x || newDirection.y !== -snake.direction.y) {
-    snake.nextDirection = newDirection;
-  //}
+  if (
+    newDirection &&
+    (newDirection.x !== -snake.direction.x ||
+      newDirection.y !== -snake.direction.y)
+  ) {
+    snake.directionQueue.push(newDirection);
+  }
 }
 
 function resetGame() {
@@ -143,6 +158,6 @@ function startGame() {
   apple.render();
 }
 
-document.addEventListener("keydown", handleDirectionChange);
+document.addEventListener('keydown', handleDirectionChange);
 
 startGame();
