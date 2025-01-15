@@ -1,70 +1,136 @@
-const snake = document.querySelector('.game-snake');
-const apple = document.querySelector('.game-apple');
+const gameField = document.querySelector(".game-field");
+const gridSize = 25;
 const gridColumns = 32;
 const gridRows = 24;
+let gameInterval;
+let speed = 200; 
 
-const snakeData = {
-  length: 1,
-  position: { x: 12, y: 12 },
-  direction: { x: 0, y: 0 },
-  speed: 200,
-};
-
-let applePosition = { x: 18, y: 12 };
-
-function updateSnakePosition() {
-  snakeData.position.x += snakeData.direction.x;
-  snakeData.position.y += snakeData.direction.y;
-
-  if (
-    snakeData.position.x < 1 ||
-    snakeData.position.x > gridColumns ||
-    snakeData.position.y < 1 ||
-    snakeData.position.y > gridRows
-  )
-    restartGame();
-
-  if (
-    snakeData.position.x === applePosition.x &&
-    snakeData.position.y === applePosition.y
-  ) {
-    snakeData.length += 1;
-    apple.style.visibility = 'hidden';
+// Snake Class
+class Snake {
+  constructor(startPosition) {
+    this.segments = [startPosition];
+    this.direction = { x: 0, y: 0 }; 
   }
 
-  snake.style.gridColumn = `${snakeData.position.x} / span 1`;
-  snake.style.gridRow = `${snakeData.position.y} / span 1`;
+  move() {
+    const newHead = {
+      x: this.segments[0].x + this.direction.x,
+      y: this.segments[0].y + this.direction.y,
+    };
+
+    this.segments.unshift(newHead);
+
+    return this.segments.pop();
+  }
+
+  grow() {
+    const lastSegment = this.segments[this.segments.length - 1];
+    this.segments.push({ ...lastSegment });
+  }
+
+  collidesWith(position) {
+    return this.segments.some(segment => segment.x === position.x && segment.y === position.y);
+  }
+
+  render() {
+    gameField.innerHTML = "";
+    this.segments.forEach((segment, index) => {
+      const segmentDiv = document.createElement("div");
+      segmentDiv.style.width = `${gridSize}px`;
+      segmentDiv.style.height = `${gridSize}px`;
+      segmentDiv.style.position = "absolute";
+      segmentDiv.style.transform = `translate(${(segment.x - 1) * gridSize}px, ${(segment.y - 1) * gridSize}px)`;
+      segmentDiv.style.backgroundColor = index === 0 ? "#4caf50" : "#81c784";
+      segmentDiv.style.borderRadius = "5px";
+      gameField.appendChild(segmentDiv);
+    });
+  }
 }
 
-function setApplePosition() {
-  apple.style.gridColumn = `${applePosition.x} / span 1`;
-  apple.style.gridRow = `${applePosition.y} / span 1`;
+// Apple Class
+class Apple {
+  constructor(position) {
+    this.position = position;
+  }
+
+  randomizePosition() {
+    this.position = {
+      x: Math.floor(Math.random() * gridColumns) + 1,
+      y: Math.floor(Math.random() * gridRows) + 1,
+    };
+  }
+
+  render() {
+    const appleDiv = document.createElement("div");
+    appleDiv.style.width = `${gridSize}px`;
+    appleDiv.style.height = `${gridSize}px`;
+    appleDiv.style.position = "absolute";
+    appleDiv.style.transform = `translate(${(this.position.x - 1) * gridSize}px, ${(this.position.y - 1) * gridSize}px)`;
+    appleDiv.style.backgroundColor = "#e74c3c";
+    appleDiv.style.borderRadius = "50%";
+    gameField.appendChild(appleDiv);
+  }
 }
 
-function changeDirection(event) {
+const snake = new Snake({ x: 12, y: 12 });
+const apple = new Apple({ x: 18, y: 12 });
+
+function moveSnake() {
+  snake.move();
+
+  const head = snake.segments[0];
+  if (head.x < 1 || head.x > gridColumns || head.y < 1 || head.y > gridRows) {
+    alert("Game Over! The snake hit the wall.");
+    resetGame();
+    return;
+  }
+
+  if (snake.segments.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) {
+    alert("Game Over! The snake collided with itself.");
+    resetGame();
+    return;
+  }
+
+  if (head.x === apple.position.x && head.y === apple.position.y) {
+    snake.grow();
+    apple.randomizePosition();
+  }
+
+  snake.render();
+  apple.render();
+}
+
+function handleDirectionChange(event) {
   switch (event.key) {
-    case 'ArrowUp':
-      if (snakeData.direction.y === 0) snakeData.direction = { x: 0, y: -1 };
+    case "ArrowUp":
+      if (snake.direction.y === 0) snake.direction = { x: 0, y: -1 };
       break;
-    case 'ArrowDown':
-      if (snakeData.direction.y === 0) snakeData.direction = { x: 0, y: 1 };
+    case "ArrowDown":
+      if (snake.direction.y === 0) snake.direction = { x: 0, y: 1 };
       break;
-    case 'ArrowLeft':
-      if (snakeData.direction.x === 0) snakeData.direction = { x: -1, y: 0 };
+    case "ArrowLeft":
+      if (snake.direction.x === 0) snake.direction = { x: -1, y: 0 };
       break;
-    case 'ArrowRight':
-      if (snakeData.direction.x === 0) snakeData.direction = { x: 1, y: 0 };
+    case "ArrowRight":
+      if (snake.direction.x === 0) snake.direction = { x: 1, y: 0 };
       break;
   }
 }
 
-function restartGame() {
-  setApplePosition();
-  snakeData.position = { x: 12, y: 12 };
-  snakeData.direction = { x: 0, y: 0 };
-  apple.style.visibility = 'visible';
+function resetGame() {
+  clearInterval(gameInterval);
+  snake.segments = [{ x: 5, y: 10 }];
+  snake.direction = { x: 0, y: 0 };
+  apple.randomizePosition();
+  startGame();
 }
 
-document.addEventListener('keydown', changeDirection);
+function startGame() {
+  gameInterval = setInterval(moveSnake, speed);
+  snake.render();
+  apple.render();
+}
 
-setInterval(updateSnakePosition, snakeData.speed);
+document.addEventListener("keydown", handleDirectionChange);
+
+startGame();
