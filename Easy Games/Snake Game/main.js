@@ -10,9 +10,15 @@ class Snake {
   constructor(startPosition) {
     this.segments = [startPosition];
     this.direction = { x: 0, y: 0 }; 
+    this.nextDirection = null;
   }
 
   move() {
+    if (this.nextDirection) {
+      this.direction = this.nextDirection;
+      this.nextDirection = null;
+    }
+
     const newHead = {
       x: this.segments[0].x + this.direction.x,
       y: this.segments[0].y + this.direction.y,
@@ -101,20 +107,26 @@ function moveSnake() {
 }
 
 function handleDirectionChange(event) {
+  const newDirection = { ...snake.direction };
+
   switch (event.key) {
     case "ArrowUp":
-      if (snake.direction.y === 0) snake.direction = { x: 0, y: -1 };
+      if (snake.direction.y === 0) newDirection.x = 0, newDirection.y = -1;
       break;
     case "ArrowDown":
-      if (snake.direction.y === 0) snake.direction = { x: 0, y: 1 };
+      if (snake.direction.y === 0) newDirection.x = 0, newDirection.y = 1;
       break;
     case "ArrowLeft":
-      if (snake.direction.x === 0) snake.direction = { x: -1, y: 0 };
+      if (snake.direction.x === 0) newDirection.x = -1, newDirection.y = 0;
       break;
     case "ArrowRight":
-      if (snake.direction.x === 0) snake.direction = { x: 1, y: 0 };
+      if (snake.direction.x === 0) newDirection.x = 1, newDirection.y = 0;
       break;
   }
+
+  //if (newDirection.x !== -snake.direction.x || newDirection.y !== -snake.direction.y) {
+    snake.nextDirection = newDirection;
+  //}
 }
 
 function resetGame() {
