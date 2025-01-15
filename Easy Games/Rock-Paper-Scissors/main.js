@@ -38,9 +38,9 @@ const startGame = () => {
     playerHand.src = `./hand_svgs/${playerChoice}.svg`;
     computerHand.src = `./hand_svgs/${computerChoice}.svg`;
 
+    playerChoices.push(playerChoice);
     winner = determineWinner(playerChoice, computerChoice);
     updateGameHistory(winner, playerChoice, computerChoice);
-    playerChoices.push(playerChoice);
   }, 3000);
 };
 
@@ -73,6 +73,7 @@ function updateGameHistory(winner, playerChoice, computerChoice) {
     playerScore++;
   } else if (winner === 'Computer') {
     computerScore++;
+    playerChoices = [];
   } else {
     tie++;
   }
